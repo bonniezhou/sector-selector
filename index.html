@@ -2,55 +2,65 @@
 <html ng-app="sectorSelector">
 <head>
 	<title>Sector Selector</title>
+	<!--Responsive Bootstrap framework-->
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<!--Custom styles-->
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<!--Angular.JS framework-->
 	<script type="text/javascript" src="js/angular.js"></script>
+	<!--Custom script-->
 	<script type="text/javascript" src="js/app.js"></script>
 </head>
 <body ng-controller="appController">
+	<!--header-->
 	<h1>Sector Selector</h1>
 
-	<div id="page1">
+	<!--Page 1: Select up to 4 sectors-->
+	<div ng-show="page1">
+		<!--Page 1 sub-header-->
 		<h4>SELECT UP TO 4 SECTORS TO COMPARE</h4>
-		<form id="choices" ng-submit="chooseSectors();">
-			<span class="choice" ng-repeat="sector in sectors.slice(0,4)">
-				<label>
-					<input type="checkbox" ng-model="sector.selected" ng-disabled="!sector.selected &&exceeded()"/>
-					{{sector.name}}
-				</label>
-			</span>
-			<br>
-			<span class="choice" ng-repeat="sector in sectors.slice(4,8)">
-				<label>
-					<input type="checkbox" ng-model="sector.selected" ng-disabled="!sector.selected &&exceeded()"/>
-					{{sector.name}}
-				</label>
-			</span>
-			<br>
-			<button type="submit">Submit Choices</button>
-		</form>
-		<p id="emptySelection" style="display:none">
+
+		<!--Selection form-->
+		<div id="selection-container">
+			<form id="choices" ng-submit="submitChoices();">
+					<label ng-repeat="sector in sectors">
+							<div ng-click="toggle(sector);" ng-class="chooseClass(sector)">
+							{{sector.name}}</div>
+					</label>
+				<br>
+				<button type="submit">Submit Choices</button>
+			</form>
+		</div>
+
+		<!--Error message: Empty selection-->
+		<p ng-show="emptySelection">
 			You did not enter a selection.
 		</p>
 	</div>
 
-	<div id="page2" style="display:none">
+	<!--Page 2: Enter e-mail-->
+	<div ng-show="page2">
+		<!--Page 2 sub-header-->
 		<h4>
 			Thanks for your choices. You chose 
 			<span ng-repeat="sector in sectors | filter:{selected:true}">{{sector.name}}{{!$last && ', ' || '.'}}</span>
 			<br>
 			Want more information? Enter your e-mail address below:
 		</h4>
+
+		<!--Submit e-mail form-->
 		<form ng-submit="enterEmail();">
 			<input type="email" placeholder="E-mail Address" ng-model="emailInput">
 			<button type="submit">Submit</button>
 		</form>
 
-		<p id="emptyEmail" style="display:none">
+		<!--Error message: Empty e-mail address-->
+		<p ng-show="emptyEmail">
 			You did not enter an e-mail address.
 		</p>
 
-		<div id="options">
+		<!--Options form-->
+		<div id="options-form">
 			<form ng-submit="changeOptions();">
 				<button type="submit">Change Selected Options</button>
 			</form>
@@ -59,6 +69,5 @@
 			</form>
 		</div>
 	</div>
-
 </body>
 </html>
